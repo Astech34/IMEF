@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "numpy>=1.19",
-    "xarray>=0.16",
+    "xarray[parallel,io]>=0.16",
     "scipy>1.5",
     "tqdm>=4.59",
     "requests>=2.27",
