@@ -1,3 +1,6 @@
+# MAC
+.DS_Store
+
 *.pkl
 modeling/linear_regression/train_data.pkl
 modeling/graphs/Obsolete/data.pkl

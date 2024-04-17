@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def crt_to_sph(x, y, z):
@@ -52,43 +54,47 @@ corotation fields
 
 def corotation_efield(coords, sph=False):
     """
-    Compute corotation electric field in equatorial plane from given coordinates.
-    Based on [...]
-
+    Compute corotation electric field in the equatorial plane from given coordinates.
+    
     Args:
-        coords (ndarray): array of coordinates to compute efield in (x,y,z) or (r, theta, phi), with units in [m]; see 'sph' condition.
-        sph (bool, optional): deterimes if input coordinates are in cartesian (False) or spherical (True); Defaults to False.
-
+        coords (ndarray): array of coordinates to compute efield in (x, y, z) or (r, theta, phi), with units in [m]; see 'sph' condition.
+        sph (bool, optional): determines if input coordinates are in Cartesian (False) or spherical (True). Defaults to False.
+        
     Returns:
-     ndarray: coration E-field in 3 dimensions in units [mV/m]
+        ndarray: corotation E-field in 3 dimensions in units [mV/m]
     """
-
+    
     if sph == False:
-        # convert cartesian to spherical coordinates
+        # Cartesian coordinates provided
         rgeo, theta, phi = crt_to_sph(coords[0], coords[1], coords[2])
-
     else:
-        # unpack coordinates
+        # Spherical coordinates provided
         rgeo = coords[0]
+        theta = coords[1] if len(coords) > 1 else 0.0  # Default to 0 if not provided
+        phi = coords[2] if len(coords) > 2 else 0.0  # Default to 0 if not provided
 
-    # equatorial magnetic field strength at surface of Earth [T]
+    # Equatorial magnetic field strength at the surface of Earth [T]
     BE = 3.1e-5
 
-    # angular velocity of the Earth’s rotation [rad/s]
+    # Angular velocity of the Earth’s rotation [rad/s]
     omega = 7.2921e-5
 
-    # equatorial radius of earth [m]
+    # Equatorial radius of Earth [m]
     RE = 6371000
 
-    # radial component with zero check
+    # Radial component with zero check
     ER0 = (omega * BE * RE**3) / rgeo**2 if rgeo != 0 else np.nan
 
-    # convert to [mV/m]
+    # Convert to [mV/m]
     ER0 = ER0 * 1000
 
-    # return array [mV/m]
-    # 5/24/23 - changed sign from (+) to (-)
-    ER = -1.0 * np.array([ER0, 0.0, 0.0])
+    # Convert back to Cartesian coordinates
+    x = ER0 * np.sin(theta) * np.cos(phi)
+    y = ER0 * np.sin(theta) * np.sin(phi)
+    z = ER0 * np.cos(theta)
+
+    # Return array [mV/m]
+    ER = np.array([x, y, z])
     return ER
 
 
@@ -224,18 +230,27 @@ def vs_efield(coords, gs, kp, sph=False):
     # uniform convection electric field strength in equatorial plane [mV/m^2]
     A0 = convection_field_A0(kp)
 
-    # radial componenet [mV/m]
+    # radial componenet [mV/m] - rho
     EC0 = (-92.4 / rgeo**2) - (A0 * gs * (rgeo ** (gs - 1)) * (np.sin(phi)))
+    EC0
 
     ## ! one more term
 
-    # polar component [mV/m]
+    # polar component [mV/m] - theta
     EC1 = 0.0
 
-    # azimuthal component [mV/m]
+    # azimuthal component [mV/m] - phi
     EC2 = A0 * (rgeo ** (gs - 1)) * (1 / (np.sin(theta))) * (np.cos(phi))
 
-    # return array [mV/m]
-    EC = np.array([EC0, EC1, EC2])
+    # convert to cartesian 
+    X = np.cos(EC1) * np.cos(EC2) * EC0
+    Y = np.sin(EC1) * np.cos(EC2) * EC0
+    Z = np.sin(EC2) * EC0
 
+    # return array [mV/m]
+    #EC = np.array([EC0, EC1, EC2])
+
+    EC = np.array([X, Y, Z])
+    
     return EC
+
