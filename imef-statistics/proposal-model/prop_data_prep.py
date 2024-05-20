@@ -40,6 +40,7 @@ df_ds = pd.concat([df_swi, df_mms], axis=1)
 df_ds.set_index('time', inplace=True)
 
 # drop rows with nans
+df_ds_nans = df_ds.copy()
 df_ds.dropna(axis=0, inplace=True)
 
 
@@ -147,7 +148,7 @@ def write_toDf(*args):
 def prepare_3Darrs(input_arr, output_arr, lag=1, delay=1, next_steps=1):
     """
     Prepares input and output arrays into LSTM-acceptable format.
-    (With help from https://tinyurl.com/3h7me36p and Andy)
+    (Thanks to help from https://tinyurl.com/3h7me36p and Andy)
 
     Args:
         input_arr (array): (1D/2D array with different time measurements as rows and features as columns)
