@@ -77,7 +77,7 @@ class FeedForwardNN_MCDO(nn.Module):
         self.output_size = output_size
         
     def forward(self, x):
-        # So when modeling time series with feed-forward NN's, it's important to note that there's a neuron
+        #  When modeling time series with feed-forward NN's, it's important to note that there's a neuron
         # for each time step AND FEATURE; so if you have 60 time steps and 2 features, then you have 120 numbers
         # to give as input; so the NN see the time steps and features *at the same time*
         # we can express this idea by taking our 3d array (with original shape [num_pts, seq_len, num_feats])
