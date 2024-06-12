@@ -95,3 +95,5 @@ def write_toDf(*args):
     # ammend time?
 
     return df
+
+# arrange training dataset
