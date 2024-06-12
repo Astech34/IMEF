@@ -26,10 +26,14 @@ DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f'Device: {DEVICE}')
 
 # load data
-df_ds = pdp.df_ds  # mms test data (from Andy)
+# df_ds = pdp.df_ds  # mms test data (from Andy)
+df_ds = pd.read_pickle("prop_models/complete_training_df") # complete set (2019-2022)
 
 # set predictors and target
-predictors = ["SYM/H_INDEX_nT", "X", "Y", "Z"]  # predictors, features
+# predictors = ["SYM/H_INDEX_nT", "X", "Y", "Z"]  # predictors, features
+# target = ["EX", "EY", "EZ"]  # targets, outputs
+
+predictors = ["Dst","OMNI_IMF","OMNI_Vx","OMNI_Vy","OMNI_Vz","OMNI_SYM_H"] # predictors, features
 target = ["EX", "EY", "EZ"]  # targets, outputs
 
 
