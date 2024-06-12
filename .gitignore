@@ -1,6 +1,21 @@
 __pycache__
-*.pkl
+
+# ignore local datafiles [izzak]
 modeling/linear_regression/train_data.pkl
 modeling/graphs/Obsolete/data.pkl
 modeling/graphs/9_10_15_to_9_16_2016.csv
+
+# ignore local datafiles [bisola]
+imef-statistics/mms-data/mms-jae/*
+
+# ignore these filetypes
+*.pkl
 *.idea
+*.png
+*.pdf
+*.svg
+*.nc
+*.cdf
+
+# misc
+/Users/bisola/dev/unh-srl/imef/imef-statistics/backup_norepo/*
