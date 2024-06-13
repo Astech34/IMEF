@@ -33,17 +33,17 @@ df_ds = pd.read_pickle("prop_models/complete_training_df") # complete set (2019-
 # predictors = ["SYM/H_INDEX_nT", "X", "Y", "Z"]  # predictors, features
 # target = ["EX", "EY", "EZ"]  # targets, outputs
 
-predictors = ["Dst","OMNI_IMF","OMNI_Vx","OMNI_Vy","OMNI_Vz","OMNI_SYM_H"] # predictors, features
+predictors = ["OMNI_IMF","OMNI_Vx","OMNI_Vy","OMNI_Vz","OMNI_SYM_H","L","MLAT"] # predictors, features
 target = ["EX", "EY", "EZ"]  # targets, outputs
 
 
 # hyperparameter configuration
-CONFIG = {'hidden_size':[50, 30, 15],  # no. of nuerons in hidden layer ;experiment
-          'learning_rate':0.001,  # learning rate,
+CONFIG = {'hidden_size':[1000, 100, 15],  # no. of nuerons in hidden layer ;experiment
+          'learning_rate':1e-5,  # learning rate,
           'seq_len':60,  # sequence length
           'bsize':32,  # batch size
           'dropout_prob':0.2,  # dropout probability
-          'num_epochs':200, # number of epochs
+          'num_epochs':500, # number of epochs
           'patience':20, # stop-loss function patience
           'num_features':len(predictors),  # no. of input features/variables
           'output_size':len(target)  # predicting n vars where n = len(target) array
@@ -51,6 +51,7 @@ CONFIG = {'hidden_size':[50, 30, 15],  # no. of nuerons in hidden layer ;experim
 
 # main
 def main():
+    # MODEL SETUP 
 
     # set a fixed value for the hash seed
     seed=42
@@ -138,7 +139,8 @@ def main():
     print(x_train_tensor.shape, y_train_tensor.shape)
     print(model(x_train_tensor).shape)
 
-    # train the model
+    # MODEL TRAINING
+
     test_loss = []  # list to hold test loss values over epoch
     val_loss = []  # list to hold validation loss values over epoch
 
@@ -198,14 +200,20 @@ def main():
             f"Epoch [{epoch + 1}/{CONFIG['num_epochs']}], Test Loss: {loss_sum:.4f}, Validation Loss: {v_loss_sum:.4f}"
         )
 
+    # SAVES
+
     # save model locally
     print("Saving model...")
     model_floc = "prop_models/" # directory to save model 
-    model_fname = "ANN_standard" # model name
+    model_fname = "ANN_complete_a" # model name
     model_path = model_floc + model_fname
     torch.save(model.state_dict(), model_path)
     # to load, use:
     # model.load_state_dict(torch.load(fname))
+
+    # save xtest, ytest arrays
+    # np.save(model_path+'xtest', x_test)
+    # np.save(model_path + "ytest", y_test)
 
     # save hyperparameter configuration
     with open(model_path + "_config.json", "w") as f:
@@ -220,7 +228,7 @@ def main():
     ax.set_ylabel("loss")
     ax.legend()
     # save figure
-    utils.save_fig_loc(fname='loss_plot', path='prop_figures/', override=True)
+    utils.save_fig_loc(fname='loss_plot_a', path='prop_figures/', override=True)
 
 
 if __name__ == '__main__':

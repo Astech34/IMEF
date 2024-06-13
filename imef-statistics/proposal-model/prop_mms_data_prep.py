@@ -55,7 +55,7 @@ def write_toDf(*args):
     return df
 
 def main():
-    # LOCATE AND PULL MMS DATA
+    # %%% GET MMS DATA %%%
 
     # (*) glob module finds all pathnames given user-perscribed rules
     data_floc = "../mms-data/"  # directory for data file location
@@ -111,8 +111,9 @@ def main():
     # # check
     # mms_df.head(5)
 
-    # GET OMNIWEB DATA
+    # %%% GET OMNIWEB DATA %%%
     # (using hapi)
+
     from hapiclient import hapi
 
     # data server
@@ -131,16 +132,16 @@ def main():
     t0 = "2015-09-01T00:00:00"
     tf = "2022-08-31T23:59:00"
 
-    # The HAPI convention is that parameters is a comma-separated list. Here we request two parameters.
-    omni_parameters = "IMF,Vx,Vy,Vz,SYM_H"
+    # parameters to pull
+    omni_parameters = "IMF,BY_GSE,BZ_GSE,Vx,Vy,Vz,SYM_H"
 
-    # Configuration options for the hapi function.
+    # hapi configuration options
     opts = {"logging": True, "usecache": True, "cachedir": "./hapicache"}
 
-    # Get parameter data. See section 5 for for information on getting available datasets and parameters
+    # pull parameter data
     omni_data, meta = hapi(server, dataset, omni_parameters, t0, tf, **opts)
 
-    # COMBINE DATA
+    # %%% COMBINE OMNI & MMS DATA %%%
 
     # create df to hold combined mms and omni datasets
     complete_df = mms_df.copy()
@@ -158,12 +159,17 @@ def main():
     for var in omni_names:
         complete_df["OMNI_" + var] = omni_data[var]
 
-    # CLEAN DATA
+    # %%% CLEAN DATA %%%
 
     # interpolation (optional)
     # - (!) check - use datrange and go to first minute to last and generate all timestamps
     # - (!) show truly only interpolating up to 15
-    complete_df = complete_df.interpolate(method="linear", limit=5)
+    # - (!!) this needs to be updated; do NOT interpolate target!
+    # complete_df = complete_df.interpolate(method="linear", limit=5)
+
+    # OMNI velcotiy has erroneous data where Vxyz values ~99999.9; removing those
+    omni_threshold = 90000
+    complete_df[complete_df["OMNI_Vx"] >= omni_threshold] = np.nan
 
     # drop rows with nans
     complete_df.dropna(axis=0, inplace=True)
