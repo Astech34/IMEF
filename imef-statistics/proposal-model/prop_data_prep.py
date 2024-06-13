@@ -34,6 +34,7 @@ df_ds = pd.concat([df_swi, df_mms], axis=1)
 # interpolation (optional)
 # - (!) check - use datrange and go to first minute to last and generate all timestamps
 # - (!) show truly only interpolating up to 15
+# - (!!) this needs to be updated; do NOT interpolate target!
 # df_ds = df_ds.interpolate(method='linear',limit=15)
 
 # convert index to time index

@@ -266,6 +266,7 @@ def expand_kp(kp_times, kp, time_to_expand_to):
     # iterate through all times and convert them to datetime64 objects
     # # [BI:6/06/24] if this becomes a common need, make separate function?
     for time in kp_times:
+        
         # timedelta is done because the min function used later chooses the lower value in the case of a tie > want the upper value to be chosen
         if type(time) == type(dt.datetime(2015, 9, 10)):
             time64 = np.datetime64(time - dt.timedelta(microseconds=1))
