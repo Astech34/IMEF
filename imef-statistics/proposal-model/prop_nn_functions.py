@@ -12,11 +12,11 @@ import os
 import shutil
 from urllib import request
 from contextlib import closing
-import requests
+import requests 
 # from heliopy.data import omni  # no longeer supported !
 
-from pymms.data import edi, util, fgm, fpi, edp
-from pymms.sdc import mrmms_sdc_api as mms_api
+# from pymms.data import edi, util, fgm, fpi, edp
+# from pymms.sdc import mrmms_sdc_api as mms_api
 
 
 #import imef.data.download_data as dd
