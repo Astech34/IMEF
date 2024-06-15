@@ -38,6 +38,9 @@ prop-test.ipynb
     - BI personal testing file for doing many, disorganized things
     - (!) read at your own risk! may give you a headache...
 
+prop_efield_mapping.ipyb
+    - notebook for implementing efield maps
+
 
 ## FOLDERS
 kp_data/
