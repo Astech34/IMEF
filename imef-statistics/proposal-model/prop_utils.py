@@ -25,7 +25,6 @@ import prop_MCDO_functions as MCDO
 def get_non_nan_inds(arr):
     return np.where( ~np.isnan(arr) )[0]
 
-
 # save figure
 def save_fig_loc(fname='fig', path=None, override=True):
 
