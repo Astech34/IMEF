@@ -10,7 +10,27 @@ import prop_MCDO_functions as MCDO
 
 def perfect_axis(ax, x, y):
     ''' create square plots with equal x/y axes'''
+
     plot_dim = max([max(x), max(y), abs(min(x)), abs(min(y))])
+    print(f"dimension: {plot_dim}")
+    ax.set_xlim([-plot_dim, plot_dim])
+    ax.set_ylim([-plot_dim, plot_dim])
+    ax.set_aspect("equal")
+
+
+# lims = [
+#     np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+#     np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+# ]
+
+# # now plot both limits against eachother
+# ax.plot(lims, lims, "k-", alpha=0.75, zorder=0)
+
+
+def perfect_axis_noNaN(ax, x, y):
+    """create square plots with equal x/y axes, ignore nans"""
+
+    plot_dim = max([np.nanmax(x), np.nanmax(y), abs(np.nanmin(x)), abs(np.nanmin(y))])
     print(f"dimension: {plot_dim}")
     ax.set_xlim([-plot_dim, plot_dim])
     ax.set_ylim([-plot_dim, plot_dim])
@@ -64,7 +84,7 @@ def plot_preds_scatter(targets_lst, actual_data, preds_data):
         axes[i].scatter(px, py, c="k", marker=".", s=15, alpha=1)
         axes[i].set_title(f"Target: {targets_lst[i]}")
         axes[i].set_xlabel("predictions")
-        axes[i].set_ylabel("test (true values)")
+        axes[i].set_ylabel("true values")
 
         # polyfit line
         axes[i].plot(
@@ -73,6 +93,10 @@ def plot_preds_scatter(targets_lst, actual_data, preds_data):
             c="r",
             linewidth=2,
         )
+
+        # identity line (x=y)
+        # (!) axes should be equal!
+        axes[i].axline((0, 0), slope=1, c='r', linestyle='--')
 
         # create equal axis
         perfect_axis(axes[i], px, py)
