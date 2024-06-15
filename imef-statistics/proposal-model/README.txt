@@ -31,15 +31,15 @@ prop_nn_models.py
 prop_visualizations.py
     - file to hold plotting and visualization functions
 
-prop_test_maps.ipynb
-    - BI personal testing file for E-Field map creation
+prop_nn_testing.ipynb
+    - BI personal testing file for playing around with model
 
 prop-test.ipynb
     - BI personal testing file for doing many, disorganized things
     - (!) read at your own risk! may give you a headache...
 
 prop_efield_mapping.ipyb
-    - notebook for implementing efield maps
+    - testing notebook for implementing efield maps
 
 
 ## FOLDERS
