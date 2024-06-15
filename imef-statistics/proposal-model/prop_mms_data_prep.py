@@ -90,6 +90,7 @@ def main():
         mms_dataset["Dst"],
         mms_dataset["L"],
         mms_dataset["MLAT"],
+        mms_dataset["MLT"],
         mms_dataset["Scpot"],
         mms_dataset["E_DIS"],
         mms_dataset["E_EDI"],
