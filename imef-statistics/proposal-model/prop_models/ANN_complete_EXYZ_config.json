@@ -1,0 +1,1 @@
+{"hidden_size": [1000, 500, 100, 15], "learning_rate": 1e-06, "seq_len": 60, "bsize": 32, "dropout_prob": 0.2, "num_epochs": 800, "patience": 20, "num_features": 8, "output_size": 3}
