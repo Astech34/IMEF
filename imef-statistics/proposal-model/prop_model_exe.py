@@ -33,17 +33,18 @@ df_ds = pd.read_pickle("prop_models/complete_training_df") # complete set (2019-
 # predictors = ["SYM/H_INDEX_nT", "X", "Y", "Z"]  # predictors, features
 # target = ["EX", "EY", "EZ"]  # targets, outputs
 
-predictors = ["OMNI_IMF","OMNI_Vx","OMNI_Vy","OMNI_Vz","OMNI_SYM_H","L","MLAT"] # predictors, features
+predictors = ["OMNI_IMF","OMNI_Vx","OMNI_Vy","OMNI_Vz","OMNI_SYM_H","L","MLAT","MLT"] # predictors, features
 target = ["EX", "EY", "EZ"]  # targets, outputs
+# target = ["EZ"]  # targets, outputs
 
 
 # hyperparameter configuration
-CONFIG = {'hidden_size':[1000, 100, 15],  # no. of nuerons in hidden layer ;experiment
-          'learning_rate':1e-5,  # learning rate,
+CONFIG = {'hidden_size':[1000, 500, 100, 15],  # no. of nuerons in hidden layer ;experiment
+          'learning_rate':1e-6,  # learning rate,
           'seq_len':60,  # sequence length
           'bsize':32,  # batch size
           'dropout_prob':0.2,  # dropout probability
-          'num_epochs':500, # number of epochs
+          'num_epochs':800, # number of epochs
           'patience':20, # stop-loss function patience
           'num_features':len(predictors),  # no. of input features/variables
           'output_size':len(target)  # predicting n vars where n = len(target) array
@@ -51,7 +52,7 @@ CONFIG = {'hidden_size':[1000, 100, 15],  # no. of nuerons in hidden layer ;expe
 
 # main
 def main():
-    # MODEL SETUP 
+    # MODEL SETUP
 
     # set a fixed value for the hash seed
     seed=42
@@ -93,8 +94,14 @@ def main():
     x_scaler.fit(x.values)
     x_scaled = x_scaler.transform(x)
     y_scaler = StandardScaler()
-    y_scaler.fit(y.values)
-    y_scaled = y_scaler.transform(y)
+
+    # adjusting for single or multiple targets
+    if len(target) > 1:
+        y_scaler.fit(y.values)
+        y_scaled = y_scaler.transform(y)
+    else:
+        y_scaler.fit(y)
+        y_scaled = y_scaler.transform(y)
 
     # write as 3D arrays
     x_scaled3d, y_scaled3d = pdp.prepare_3Darrs(x_scaled,y_scaled,lag=CONFIG['seq_len'],delay=1,next_steps=1)
@@ -134,6 +141,8 @@ def main():
     # validation data loading
     val_data = TensorDataset(x_val_tensor, y_val_tensor)
     val_loader = DataLoader(val_data, batch_size=CONFIG['bsize'], shuffle=True)
+
+    # % for loop here? 
 
     # check
     print(x_train_tensor.shape, y_train_tensor.shape)
@@ -202,10 +211,12 @@ def main():
 
     # SAVES
 
+    # % save RMSE metric? R,
+
     # save model locally
     print("Saving model...")
     model_floc = "prop_models/" # directory to save model 
-    model_fname = "ANN_complete_a" # model name
+    model_fname = "ANN_complete_EXYZ" # model name
     model_path = model_floc + model_fname
     torch.save(model.state_dict(), model_path)
     # to load, use:
@@ -228,7 +239,7 @@ def main():
     ax.set_ylabel("loss")
     ax.legend()
     # save figure
-    utils.save_fig_loc(fname='loss_plot_a', path='prop_figures/', override=True)
+    utils.save_fig_loc(fname='loss_plot_EXYZ', path='prop_figures/', override=True)
 
 
 if __name__ == '__main__':
