@@ -130,7 +130,7 @@ def main():
     # combined_data.index[0]    >>Timestamp('2015-09-01 00:00:00')
     # combined_data.index[-1]   >>Timestamp('2022-08-31 23:59:00')
 
-    t0 = "2015-09-01T00:00:00"
+    t0 = "2015-09-01T00:00:00"  # (!) NEED TO CHECK IF OMNI PULLS CORRECT TIMES
     tf = "2022-08-31T23:59:00"
 
     # parameters to pull
