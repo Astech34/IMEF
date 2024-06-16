@@ -68,9 +68,13 @@ def plot_targets_overview(targets_lst, actual_data, preds_data):
         axes[i].legend(loc="center left", bbox_to_anchor=(1, 0.5))
 
 
-def plot_preds_scatter(targets_lst, actual_data, preds_data):
-    fig, axes = plt.subplots(1, len(targets_lst), figsize=(9, 8))
-    fig.tight_layout()
+def plot_preds_scatter(targets_lst, actual_data, preds_data, set_fig = True, axes=None, hex=True):
+    
+    # create figure if not established outside function
+    if set_fig == True:
+        fig, axes = plt.subplots(1, len(targets_lst), figsize=(9, 8))
+        fig.tight_layout()
+
     for i in range(len(targets_lst)):
         px = preds_data[:, i]
         py = actual_data[:, i]
@@ -81,7 +85,15 @@ def plot_preds_scatter(targets_lst, actual_data, preds_data):
 
         # plot data
         ptxt = f"RMSE = {rmse:.2f} \n R = {ccoeff:.2f}"
-        axes[i].scatter(px, py, c="k", marker=".", s=15, alpha=1)
+
+        # if hex is true, plot as log count hexbins
+        if hex == True:
+            hexim = axes[i].hexbin(px,py,gridsize=(200,200),bins='log',cmap='GnBu_r')
+        # otherwise, normal scatter plot
+        else:
+            axes[i].scatter(px, py, c="k", marker=".", s=15, alpha=1)
+
+        # set axes attributes
         axes[i].set_title(f"Target: {targets_lst[i]}")
         axes[i].set_xlabel("predictions")
         axes[i].set_ylabel("true values")
@@ -96,7 +108,7 @@ def plot_preds_scatter(targets_lst, actual_data, preds_data):
 
         # identity line (x=y)
         # (!) axes should be equal!
-        axes[i].axline((0, 0), slope=1, c='r', linestyle='--')
+        axes[i].axline((0, 0), slope=1, c='r', linestyle='--',linewidth=1)
 
         # create equal axis
         perfect_axis(axes[i], px, py)
